@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Exceptions\ValidationException;
+use App\Helper;
+use App\Repositories\UserRepository;
+use App\Validators\User\RegisterValidator;
+
+class UserController
+{
+    /**
+     * @var UserRepository
+     */
+    protected UserRepository $userRepository;
+
+    public function __construct()
+    {
+        $this->userRepository = new UserRepository();
+    }
+
+    public function register(): string
+    {
+        $validator = new RegisterValidator();
+
+        try {
+            $validator->validate();
+            $this->userRepository->create();
+        } catch (ValidationException $e) {
+            return Helper::responseError($e->getMessage());
+        }
+
+        return Helper::response('Vartotojas sėkmingai sukurtas.');
+    }
+}

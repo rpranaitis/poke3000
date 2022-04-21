@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  nginx:
+    image: nginx:1.20.2-alpine
+    container_name: poke3000-nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./src:/home/poke3000/src
+      - ./docker-compose/nginx/config:/etc/nginx/conf.d/
+      - ./docker-compose/logs/nginx:/home/poke3000/logs
+  php:
+    build: ./docker-compose/php/
+    container_name: poke3000-php
+    working_dir: /home/poke3000/src
+    env_file:
+      - ./docker-compose/mysql/.env
+    volumes:
+      - ./src:/home/poke3000/src
+      - ./docker-compose/logs/php-fpm:/var/log/php-fpm
+  mariadb:
+    container_name: poke3000-db
+    image: mariadb:10.6.5
+    env_file:
+      - ./docker-compose/mysql/.env
+    volumes:
+      - ./docker-compose/mysql/data/mariadb:/var/lib/mysql
+    ports:
+      - 3306:3306
