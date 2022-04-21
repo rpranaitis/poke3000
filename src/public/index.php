@@ -2,6 +2,7 @@
 
 use App\Controllers\PokeController;
 use App\Controllers\UserController;
+use App\Exceptions\ValidationException;
 use App\Helper;
 use FastRoute\RouteCollector;
 
@@ -18,8 +19,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addGroup('/user', function (RouteCollector $r) {
         $r->addRoute('POST', '/register', UserController::class . '/register');
         $r->addRoute('POST', '/login', UserController::class . '/login');
-        $r->addRoute('POST', '/edit', UserController::class . '/edit');
         $r->addRoute('POST', '/logout', UserController::class . '/logout');
+        $r->addRoute('POST', '/edit/{id}', UserController::class . '/edit');
     });
 });
 
@@ -45,6 +46,12 @@ switch ($routeInfo[0]) {
         $handler = $routeInfo[1];
         $vars = $routeInfo[2];
         list($class, $method) = explode('/', $handler, 2);
-        echo call_user_func_array([new $class, $method], $vars);
+
+        try {
+            echo call_user_func_array([new $class, $method], $vars);
+        } catch (ValidationException $e) {
+            echo Helper::responseError($e->getMessage());
+        }
+
         break;
 }
