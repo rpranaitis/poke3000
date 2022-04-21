@@ -5,7 +5,7 @@ namespace App\Validators\User;
 use App\Exceptions\ValidationException;
 use App\Repositories\UserRepository;
 
-class RegisterValidator
+class RegistrationValidator
 {
     /**
      * @var UserRepository

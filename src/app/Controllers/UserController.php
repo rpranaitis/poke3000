@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Exceptions\ValidationException;
 use App\Helper;
 use App\Repositories\UserRepository;
-use App\Validators\User\RegisterValidator;
+use App\Validators\User\RegistrationValidator;
 
 class UserController
 {
@@ -19,9 +19,12 @@ class UserController
         $this->userRepository = new UserRepository();
     }
 
+    /**
+     * @return string
+     */
     public function register(): string
     {
-        $validator = new RegisterValidator();
+        $validator = new RegistrationValidator();
 
         try {
             $validator->validate();
