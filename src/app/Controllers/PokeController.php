@@ -13,4 +13,6 @@ class PokeController
     {
         return file_get_contents(ROOT_PATH . '/views/index.phtml');
     }
+
+
 }

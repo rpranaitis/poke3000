@@ -9,6 +9,7 @@ use App\Validators\User\EditingValidator;
 use App\Validators\User\LoginValidator;
 use App\Validators\User\LogoutValidator;
 use App\Validators\User\RegistrationValidator;
+use App\Validators\User\ShowValidator;
 
 class UserController
 {
@@ -31,7 +32,7 @@ class UserController
         $validator = new RegistrationValidator();
         $validator->validate();
 
-        $this->userRepository->create();
+        $this->userRepository->create($_POST);
 
         return Helper::response('Vartotojas sėkmingai sukurtas.');
     }
@@ -82,8 +83,37 @@ class UserController
         $validator = new EditingValidator();
         $validator->validate($id);
 
-        $this->userRepository->update($id);
+        $this->userRepository->update($id, $_POST);
 
         return Helper::response('Vartotojo informacija atnaujinta sėkmingai.');
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     * @throws ValidationException
+     */
+    public function show(int $id): string
+    {
+        session_start();
+
+        $validator = new ShowValidator();
+        $validator->validate($id);
+
+        $user = $this->userRepository->getUserById($id);
+
+        if (!$user) {
+            throw new ValidationException('Įvyko klaida grąžinant vartotoją.');
+        }
+
+        $data = [
+            'id'         => $user['id'],
+            'username'   => $user['username'],
+            'first_name' => $user['first_name'],
+            'last_name'  => $user['last_name'],
+            'email'      => $user['email']
+        ];
+
+        return Helper::response(null, $data);
     }
 }

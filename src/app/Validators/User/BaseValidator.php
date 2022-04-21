@@ -34,11 +34,11 @@ class BaseValidator
             throw new ValidationException('Neįvestas pakartotinas slaptažodis.');
         }
 
-        if (empty($_POST['name'])) {
+        if (empty($_POST['first_name'])) {
             throw new ValidationException('Neįvestas vardas.');
         }
 
-        if (empty($_POST['surname'])) {
+        if (empty($_POST['last_name'])) {
             throw new ValidationException('Neįvesta pavardė.');
         }
 
@@ -74,6 +74,17 @@ class BaseValidator
     {
         if (empty($_SESSION['user_id'])) {
             throw new ValidationException('Jūs esate neprisijungęs.');
+        }
+    }
+
+    /**
+     * @param int $id
+     * @throws ValidationException
+     */
+    protected function validatePermission(int $id)
+    {
+        if ($_SESSION['user_id'] !== $id) {
+            throw new ValidationException('Jūs neturite teisės šiam veiksmui.');
         }
     }
 }

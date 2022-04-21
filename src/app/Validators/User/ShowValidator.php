@@ -4,7 +4,7 @@ namespace App\Validators\User;
 
 use App\Exceptions\ValidationException;
 
-class EditingValidator extends BaseValidator
+class ShowValidator extends BaseValidator
 {
     /**
      * @param int $id
@@ -13,9 +13,6 @@ class EditingValidator extends BaseValidator
     public function validate(int $id)
     {
         $this->validateSession();
-        $this->validateRequiredFields();
         $this->validatePermission($id);
-        $this->validateArePasswordsTheSame();
-        $this->validatePasswordRules();
     }
 }

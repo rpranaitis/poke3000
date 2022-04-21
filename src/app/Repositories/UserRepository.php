@@ -23,21 +23,38 @@ class UserRepository extends Repository
     }
 
     /**
-     * @return string
+     * @param int $id
+     * @return mixed
      */
-    public function create(): string
+    public function getUserById(int $id): mixed
     {
-        $dateTime = date('Y-m-d H:i:s');
-
-        $query = 'INSERT INTO users (username, password, name, surname, email, created_at) VALUES (:username, :password, :name, :surname, :email, :created_at)';
+        $query = 'SELECT * FROM users WHERE id = :id';
 
         $stmt = $this->dbh->prepare($query);
         $stmt->execute([
-            'username'   => $_POST['username'],
-            'password'   => password_hash($_POST['password'], PASSWORD_BCRYPT),
-            'name'       => $_POST['name'],
-            'surname'    => $_POST['surname'],
-            'email'      => $_POST['email'],
+            'id' => $id
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param array $data
+     * @return string
+     */
+    public function create(array $data): string
+    {
+        $dateTime = date('Y-m-d H:i:s');
+
+        $query = 'INSERT INTO users (username, password, first_name, last_name, email, created_at) VALUES (:username, :password, :first_name, :last_name, :email, :created_at)';
+
+        $stmt = $this->dbh->prepare($query);
+        $stmt->execute([
+            'username'   => $data['username'],
+            'password'   => password_hash($data['password'], PASSWORD_BCRYPT),
+            'first_name' => $data['first_name'],
+            'last_name'  => $data['last_name'],
+            'email'      => $data['email'],
             'created_at' => $dateTime,
         ]);
 
@@ -46,21 +63,22 @@ class UserRepository extends Repository
 
     /**
      * @param int $id
+     * @param array $data
      * @return bool
      */
-    public function update(int $id): bool
+    public function update(int $id, array $data): bool
     {
         $dateTime = date('Y-m-d H:i:s');
 
-        $query = 'UPDATE users SET password = :password, name = :name, surname = :surname, email = :email, updated_at = :updated_at WHERE id = :id';
+        $query = 'UPDATE users SET password = :password, first_name = :first_name, last_name = :last_name, email = :email, updated_at = :updated_at WHERE id = :id';
 
         $stmt = $this->dbh->prepare($query);
 
         return $stmt->execute([
-            'password'   => password_hash($_POST['password'], PASSWORD_BCRYPT),
-            'name'       => $_POST['name'],
-            'surname'    => $_POST['surname'],
-            'email'      => $_POST['email'],
+            'password'   => password_hash($data['password'], PASSWORD_BCRYPT),
+            'first_name' => $data['first_name'],
+            'last_name'  => $data['last_name'],
+            'email'      => $data['email'],
             'updated_at' => $dateTime,
             'id'         => $id
         ]);

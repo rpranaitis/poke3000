@@ -1,7 +1,9 @@
 <?php
 
 use App\Controllers\PokeController;
+use App\Controllers\ServiceController;
 use App\Controllers\UserController;
+use App\Exceptions\ServiceException;
 use App\Exceptions\ValidationException;
 use App\Helper;
 use FastRoute\RouteCollector;
@@ -10,17 +12,21 @@ define('ROOT_PATH', dirname(__DIR__));
 
 require_once ROOT_PATH . '/vendor/autoload.php';
 
-(Dotenv\Dotenv::createImmutable(ROOT_PATH))->load();
+(Dotenv\Dotenv::createUnsafeImmutable(ROOT_PATH))->load();
 
 date_default_timezone_set('Europe/Vilnius');
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', PokeController::class . '/index');
     $r->addGroup('/user', function (RouteCollector $r) {
+        $r->addRoute('GET', '/show/{id}', UserController::class . '/show');
         $r->addRoute('POST', '/register', UserController::class . '/register');
         $r->addRoute('POST', '/login', UserController::class . '/login');
         $r->addRoute('POST', '/logout', UserController::class . '/logout');
         $r->addRoute('POST', '/edit/{id}', UserController::class . '/edit');
+    });
+    $r->addGroup('/service', function (RouteCollector $r) {
+        $r->addRoute('GET', '/import-users-from-csv', ServiceController::class . '/importUsersFromCsv');
     });
 });
 
@@ -49,7 +55,7 @@ switch ($routeInfo[0]) {
 
         try {
             echo call_user_func_array([new $class, $method], $vars);
-        } catch (ValidationException $e) {
+        } catch (ValidationException|ServiceException $e) {
             echo Helper::responseError($e->getMessage());
         }
 
