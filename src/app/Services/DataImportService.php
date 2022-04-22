@@ -47,11 +47,11 @@ class DataImportService
 
         for ($i = 1; $i < count($csv); $i++) {
             $data = [
-                'username'   => explode('@', $csv[3])[0],
+                'username'   => explode('@', $csv[$i][3])[0],
                 'password'   => $this->generateRandomPassword(),
-                'first_name' => $csv[1],
-                'last_name'  => $csv[2],
-                'email'      => $csv[3],
+                'first_name' => $csv[$i][1],
+                'last_name'  => $csv[$i][2],
+                'email'      => $csv[$i][3],
             ];
 
             try {
