@@ -10,7 +10,6 @@ use App\Repositories\UserRepository;
 use App\Validators\Poke\PokeValidator;
 use App\Validators\Poke\ShowingAllUsersValidator;
 use Exception;
-use PHPMailer\PHPMailer\PHPMailer;
 
 class PokeController
 {
