@@ -2,8 +2,26 @@
 
 namespace App\Repositories;
 
+use PDO;
+
 class PokeHistoryRepository extends Repository
 {
+    /**
+     * @param string $to
+     * @return bool|array
+     */
+    public function getAllPokesByEmailTo(string $to): bool|array
+    {
+        $query = 'SELECT * FROM pokes_history WHERE `to` = :to';
+
+        $stmt = $this->dbh->prepare($query);
+        $stmt->execute([
+            'to' => $to
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     /**
      * @param array $data
      * @return string

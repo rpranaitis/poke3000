@@ -18,14 +18,18 @@ date_default_timezone_set('Europe/Vilnius');
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', PokeController::class . '/index');
-    $r->addGroup('/user', function (RouteCollector $r) {
+    $r->addGroup('/users', function (RouteCollector $r) {
         $r->addRoute('GET', '/show/{id}', UserController::class . '/show');
         $r->addRoute('POST', '/register', UserController::class . '/register');
         $r->addRoute('POST', '/login', UserController::class . '/login');
         $r->addRoute('POST', '/logout', UserController::class . '/logout');
         $r->addRoute('POST', '/edit/{id}', UserController::class . '/edit');
     });
-    $r->addGroup('/service', function (RouteCollector $r) {
+    $r->addGroup('/pokes', function (RouteCollector $r) {
+        $r->addRoute('GET', '/all', PokeController::class . '/showAllUsersWithPokes');
+        $r->addRoute('POST', '/poke', PokeController::class . '/poke');
+    });
+    $r->addGroup('/services', function (RouteCollector $r) {
         $r->addRoute('GET', '/import-users-from-csv', ServiceController::class . '/importUsersFromCsv');
         $r->addRoute('GET', '/import-pokes-from-json', ServiceController::class . '/importPokesFromJson');
     });

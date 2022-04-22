@@ -10,6 +10,7 @@ use App\Validators\User\LoginValidator;
 use App\Validators\User\LogoutValidator;
 use App\Validators\User\RegistrationValidator;
 use App\Validators\User\ShowValidator;
+use Exception;
 
 class UserController
 {
@@ -32,7 +33,11 @@ class UserController
         $validator = new RegistrationValidator();
         $validator->validate();
 
-        $this->userRepository->create($_POST);
+        try {
+            $this->userRepository->create($_POST);
+        } catch (Exception $e) {
+            throw new ValidationException('Įvyko klaida kreipiantis į duomenų bazę.');
+        }
 
         return Helper::response('Vartotojas sėkmingai sukurtas.');
     }
@@ -47,6 +52,10 @@ class UserController
         $validator->validate();
 
         $user = $this->userRepository->getUserByUsername($_POST['username']);
+
+        if (!$user) {
+            throw new ValidationException('Vartotojas nerastas duomenų bazėje.');
+        }
 
         session_start();
 
@@ -83,7 +92,9 @@ class UserController
         $validator = new EditingValidator();
         $validator->validate($id);
 
-        $this->userRepository->update($id, $_POST);
+        if (!$this->userRepository->update($id, $_POST)) {
+            throw new ValidationException('Įvyko klaida kreipiantis į duomenų bazę.');
+        }
 
         return Helper::response('Vartotojo informacija atnaujinta sėkmingai.');
     }

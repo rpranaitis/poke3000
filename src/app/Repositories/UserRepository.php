@@ -7,6 +7,19 @@ use PDO;
 class UserRepository extends Repository
 {
     /**
+     * @return array
+     */
+    public function getAllUsers(): array
+    {
+        $query = 'SELECT * FROM users';
+
+        $stmt = $this->dbh->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * @param string $username
      * @return mixed
      */

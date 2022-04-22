@@ -2,10 +2,32 @@
 
 namespace App\Controllers;
 
+use App\Exceptions\ValidationException;
 use App\Helper;
+use App\Repositories\PokeHistoryRepository;
+use App\Repositories\UserRepository;
+use App\Validators\Poke\PokeValidator;
+use App\Validators\Poke\ShowingAllUsersValidator;
+use Exception;
 
 class PokeController
 {
+    /**
+     * @var UserRepository
+     */
+    protected UserRepository $userRepository;
+
+    /**
+     * @var PokeHistoryRepository
+     */
+    protected PokeHistoryRepository $pokeHistoryRepository;
+
+    public function __construct()
+    {
+        $this->userRepository = new UserRepository();
+        $this->pokeHistoryRepository = new PokeHistoryRepository();
+    }
+
     /**
      * @return string
      */
@@ -14,5 +36,64 @@ class PokeController
         return file_get_contents(ROOT_PATH . '/views/index.phtml');
     }
 
+    /**
+     * @return string
+     * @throws ValidationException
+     */
+    public function showAllUsersWithPokes(): string
+    {
+        session_start();
 
+        $validator = new ShowingAllUsersValidator();
+        $validator->validate();
+
+        $users = $this->userRepository->getAllUsers();
+        $result = [];
+
+        foreach ($users as $user) {
+            $tempUser = [
+                'id'         => $user['id'],
+                'first_name' => $user['first_name'],
+                'last_name'  => $user['last_name'],
+                'email'      => $user['email'],
+                'poke_count' => count($this->pokeHistoryRepository->getAllPokesByEmailTo($user['email']))
+            ];
+
+            $result[] = $tempUser;
+        }
+
+        return Helper::response(null, $result);
+    }
+
+    /**
+     * @return string
+     * @throws ValidationException
+     */
+    public function poke(): string
+    {
+        session_start();
+
+        $validator = new PokeValidator();
+        $validator->validate();
+
+        $from = $this->userRepository->getUserById($_POST['from']);
+        $to = $this->userRepository->getUserById($_POST['to']);
+
+        if (!$from || !$to) {
+            throw new ValidationException('Įvyko klaida grąžinant vartotoją iš duomenų bazės.');
+        }
+
+        $data = [
+            'from' => $from['email'],
+            'to'   => $to['email']
+        ];
+
+        try {
+            $this->pokeHistoryRepository->create($data);
+        } catch (Exception $e) {
+            throw new ValidationException('Įvyko klaida kreipiantis į duomenų bazę.');
+        }
+
+        return Helper::response('Poke sėkmingai išsiųstas.');
+    }
 }
