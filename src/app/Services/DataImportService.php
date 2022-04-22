@@ -26,10 +26,10 @@ class DataImportService
     }
 
     /**
-     * @return int
+     * @return int[]
      * @throws ServiceException
      */
-    public function importUsersFromCsv(): int
+    public function importUsersFromCsv(): array
     {
         $path = ROOT_PATH . getenv('USERS_CSV_FILE_PATH');
 
@@ -50,7 +50,7 @@ class DataImportService
             throw new ServiceException('Bloga CSV failo struktūra.');
         }
 
-        $failedImports = 0;
+        $successImports = $failedImports = 0;
 
         for ($i = 1; $i < count($users); $i++) {
             $data = [
@@ -63,20 +63,24 @@ class DataImportService
 
             try {
                 $this->userRepository->create($data);
+                $successImports++;
             } catch (Exception $e) {
                 $failedImports++;
                 continue;
             }
         }
 
-        return $failedImports;
+        return [
+            'success_imports' => $successImports,
+            'failed_imports' => $failedImports
+        ];
     }
 
     /**
-     * @return int
+     * @return int[]
      * @throws ServiceException
      */
-    public function importPokesFromJson(): int
+    public function importPokesFromJson(): array
     {
         $path = ROOT_PATH . getenv('POKES_JSON_FILE_PATH');
 
@@ -97,7 +101,7 @@ class DataImportService
             throw new ServiceException('Bloga JSON failo struktūra.');
         }
 
-        $failedImports = 0;
+        $successImports = $failedImports = 0;
 
         foreach ($pokes as $poke) {
             $data = [
@@ -108,13 +112,17 @@ class DataImportService
 
             try {
                 $this->pokeHistoryRepository->create($data);
+                $successImports++;
             } catch (Exception $e) {
                 $failedImports++;
                 continue;
             }
         }
 
-        return $failedImports;
+        return [
+            'success_imports' => $successImports,
+            'failed_imports' => $failedImports
+        ];
     }
 
     /**

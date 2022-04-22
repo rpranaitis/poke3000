@@ -24,13 +24,9 @@ class ServiceController
      */
     public function importUsersFromCsv(): string
     {
-        $failedImports = $this->dataImportService->importUsersFromCsv();
+        $imports = $this->dataImportService->importUsersFromCsv();
 
-        $data = [
-            'failed_imports' => $failedImports
-        ];
-
-        return Helper::response('Importavimas baigtas.', $data);
+        return Helper::response('Importavimas baigtas.', $imports);
     }
 
     /**
@@ -39,12 +35,8 @@ class ServiceController
      */
     public function importPokesFromJson(): string
     {
-        $failedImports = $this->dataImportService->importPokesFromJson();
+        $imports = $this->dataImportService->importPokesFromJson();
 
-        $data = [
-            'failed_imports' => $failedImports
-        ];
-
-        return Helper::response('Importavimas baigtas.', $data);
+        return Helper::response('Importavimas baigtas.', $imports);
     }
 }
