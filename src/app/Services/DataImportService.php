@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\ServiceException;
+use App\Repositories\PokeHistoryRepository;
 use App\Repositories\UserRepository;
 use Exception;
 
@@ -13,9 +14,15 @@ class DataImportService
      */
     protected UserRepository $userRepository;
 
+    /**
+     * @var PokeHistoryRepository $pokeHistoryRepository
+     */
+    protected PokeHistoryRepository $pokeHistoryRepository;
+
     public function __construct()
     {
         $this->userRepository = new UserRepository();
+        $this->pokeHistoryRepository = new PokeHistoryRepository();
     }
 
     /**
@@ -30,7 +37,7 @@ class DataImportService
             throw new ServiceException('Įvyko klaida. Patikrinkite kelią iki CSV failo.');
         }
 
-        $csv = array_map('str_getcsv', file($path));
+        $users = array_map('str_getcsv', file($path));
 
         $structure = [
             'id',
@@ -39,23 +46,68 @@ class DataImportService
             'email'
         ];
 
-        if ($csv[0] !== $structure) {
+        if ($users[0] !== $structure) {
             throw new ServiceException('Bloga CSV failo struktūra.');
         }
 
         $failedImports = 0;
 
-        for ($i = 1; $i < count($csv); $i++) {
+        for ($i = 1; $i < count($users); $i++) {
             $data = [
-                'username'   => explode('@', $csv[$i][3])[0],
+                'username'   => explode('@', $users[$i][3])[0],
                 'password'   => $this->generateRandomPassword(),
-                'first_name' => $csv[$i][1],
-                'last_name'  => $csv[$i][2],
-                'email'      => $csv[$i][3],
+                'first_name' => $users[$i][1],
+                'last_name'  => $users[$i][2],
+                'email'      => $users[$i][3],
             ];
 
             try {
                 $this->userRepository->create($data);
+            } catch (Exception $e) {
+                $failedImports++;
+                continue;
+            }
+        }
+
+        return $failedImports;
+    }
+
+    /**
+     * @return int
+     * @throws ServiceException
+     */
+    public function importPokesFromJson(): int
+    {
+        $path = ROOT_PATH . getenv('POKES_JSON_FILE_PATH');
+
+        if (!file_exists($path)) {
+            throw new ServiceException('Įvyko klaida. Patikrinkite kelią iki CSV failo.');
+        }
+
+        $pokes = file_get_contents($path);
+        $pokes = json_decode($pokes, true);
+
+        $structure = [
+            'from',
+            'to',
+            'date'
+        ];
+
+        if (count(array_intersect_key(array_flip($structure), $pokes[0])) !== count($structure)) {
+            throw new ServiceException('Bloga JSON failo struktūra.');
+        }
+
+        $failedImports = 0;
+
+        foreach ($pokes as $poke) {
+            $data = [
+                'from' => $poke['from'],
+                'to'   => $poke['to'],
+                'date' => $poke['date']
+            ];
+
+            try {
+                $this->pokeHistoryRepository->create($data);
             } catch (Exception $e) {
                 $failedImports++;
                 continue;

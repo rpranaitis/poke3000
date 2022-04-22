@@ -32,4 +32,19 @@ class ServiceController
 
         return Helper::response('Importavimas baigtas.', $data);
     }
+
+    /**
+     * @return string
+     * @throws ServiceException
+     */
+    public function importPokesFromJson(): string
+    {
+        $failedImports = $this->dataImportService->importPokesFromJson();
+
+        $data = [
+            'failed_imports' => $failedImports
+        ];
+
+        return Helper::response('Importavimas baigtas.', $data);
+    }
 }

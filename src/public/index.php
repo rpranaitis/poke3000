@@ -27,6 +27,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     });
     $r->addGroup('/service', function (RouteCollector $r) {
         $r->addRoute('GET', '/import-users-from-csv', ServiceController::class . '/importUsersFromCsv');
+        $r->addRoute('GET', '/import-pokes-from-json', ServiceController::class . '/importPokesFromJson');
     });
 });
 
