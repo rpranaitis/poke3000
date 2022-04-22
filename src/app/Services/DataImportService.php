@@ -24,41 +24,42 @@ class DataImportService
      */
     public function importUsersFromCsv(): int
     {
-        $row = 1;
-        $failedImports = 0;
         $path = ROOT_PATH . getenv('USERS_CSV_FILE_PATH');
 
-        if (($handle = fopen($path, 'r')) !== false) {
-            while (($data = fgetcsv($handle, 1000)) !== false) {
-                if ($row === 1) {
-                    $structure = ['id', 'first_name', 'last_name', 'email'];
-
-                    if ($data !== $structure) {
-                        throw new ServiceException('Bloga CSV failo struktūra.');
-                    }
-                } else {
-                    $data = [
-                        'username'   => explode('@', $data[3])[0],
-                        'password'   => $this->generateRandomPassword(),
-                        'first_name' => $data[1],
-                        'last_name'  => $data[2],
-                        'email'      => $data[3],
-                    ];
-
-                    try {
-                        $this->userRepository->create($data);
-                    } catch (Exception $e) {
-                        $failedImports++;
-                        continue;
-                    }
-                }
-
-                $row++;
-            }
-
-            fclose($handle);
-        } else {
+        if (!file_exists($path)) {
             throw new ServiceException('Įvyko klaida. Patikrinkite kelią iki CSV failo.');
+        }
+
+        $csv = array_map('str_getcsv', file($path));
+
+        $structure = [
+            'id',
+            'first_name',
+            'last_name',
+            'email'
+        ];
+
+        if ($csv[0] !== $structure) {
+            throw new ServiceException('Bloga CSV failo struktūra.');
+        }
+
+        $failedImports = 0;
+
+        for ($i = 1; $i < count($csv); $i++) {
+            $data = [
+                'username'   => explode('@', $csv[3])[0],
+                'password'   => $this->generateRandomPassword(),
+                'first_name' => $csv[1],
+                'last_name'  => $csv[2],
+                'email'      => $csv[3],
+            ];
+
+            try {
+                $this->userRepository->create($data);
+            } catch (Exception $e) {
+                $failedImports++;
+                continue;
+            }
         }
 
         return $failedImports;
