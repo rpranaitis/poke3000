@@ -79,8 +79,12 @@ class PokeController
         $from = $this->userRepository->getUserById($_POST['from']);
         $to = $this->userRepository->getUserById($_POST['to']);
 
-        if (!$from || !$to) {
+        if (!$from) {
             throw new ValidationException('Įvyko klaida grąžinant vartotoją iš duomenų bazės.');
+        }
+
+        if (!$to) {
+            throw new ValidationException('Vartotojas, kuriam siunčiate poke neegzistuoja.');
         }
 
         $data = [
