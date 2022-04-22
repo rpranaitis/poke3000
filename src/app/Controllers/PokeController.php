@@ -4,11 +4,13 @@ namespace App\Controllers;
 
 use App\Exceptions\ValidationException;
 use App\Helper;
+use App\Mail\PokeReceived;
 use App\Repositories\PokeHistoryRepository;
 use App\Repositories\UserRepository;
 use App\Validators\Poke\PokeValidator;
 use App\Validators\Poke\ShowingAllUsersValidator;
 use Exception;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class PokeController
 {
@@ -22,10 +24,16 @@ class PokeController
      */
     protected PokeHistoryRepository $pokeHistoryRepository;
 
+    /**
+     * @var PokeReceived
+     */
+    protected PokeReceived $pokeReceived;
+
     public function __construct()
     {
         $this->userRepository = new UserRepository();
         $this->pokeHistoryRepository = new PokeHistoryRepository();
+        $this->pokeReceived = new PokeReceived();
     }
 
     /**
@@ -98,6 +106,8 @@ class PokeController
             throw new ValidationException('Įvyko klaida kreipiantis į duomenų bazę.');
         }
 
-        return Helper::response('Poke sėkmingai išsiųstas.');
+        $emailSent = $this->pokeReceived->send($to['email'], $from['username']);
+
+        return Helper::response('Poke sėkmingai išsiųstas.', ['email_sent' => $emailSent]);
     }
 }
