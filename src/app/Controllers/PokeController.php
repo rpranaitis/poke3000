@@ -8,7 +8,7 @@ use App\Mail\PokeReceived;
 use App\Repositories\PokeHistoryRepository;
 use App\Repositories\UserRepository;
 use App\Validators\Poke\PokeValidator;
-use App\Validators\Poke\ShowingAllUsersValidator;
+use App\Validators\Poke\UserPokesValidator;
 use Exception;
 
 class PokeController
@@ -44,32 +44,26 @@ class PokeController
     }
 
     /**
+     * @param int $id
      * @return string
      * @throws ValidationException
      */
-    public function showAllUsersWithPokes(): string
+    public function showAllUserPokes(int $id): string
     {
         session_start();
 
-        $validator = new ShowingAllUsersValidator();
-        $validator->validate();
+        $validator = new UserPokesValidator();
+        $validator->validate($id);
 
-        $users = $this->userRepository->getAllUsers();
-        $result = [];
+        $user = $this->userRepository->getUserById($id);
 
-        foreach ($users as $user) {
-            $tempUser = [
-                'id'         => $user['id'],
-                'first_name' => $user['first_name'],
-                'last_name'  => $user['last_name'],
-                'email'      => $user['email'],
-                'poke_count' => count($this->pokeHistoryRepository->getAllPokesByEmailTo($user['email']))
-            ];
-
-            $result[] = $tempUser;
+        if (!$user) {
+            throw new ValidationException('Įvyko klaida grąžinant vartotoją iš duomenų bazės.');
         }
 
-        return Helper::response(null, $result);
+        $pokes = $this->pokeHistoryRepository->getAllPokesByEmailTo($user['email']) ?? [];
+
+        return Helper::response(null, $pokes);
     }
 
     /**

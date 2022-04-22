@@ -4,12 +4,14 @@ namespace App\Controllers;
 
 use App\Exceptions\ValidationException;
 use App\Helper;
+use App\Repositories\PokeHistoryRepository;
 use App\Repositories\UserRepository;
 use App\Validators\User\EditingValidator;
 use App\Validators\User\LoginValidator;
 use App\Validators\User\LogoutValidator;
 use App\Validators\User\RegistrationValidator;
 use App\Validators\User\ShowValidator;
+use App\Validators\User\UsersWithPokesValidator;
 use Exception;
 
 class UserController
@@ -19,9 +21,15 @@ class UserController
      */
     protected UserRepository $userRepository;
 
+    /**
+     * @var PokeHistoryRepository
+     */
+    protected PokeHistoryRepository $pokeHistoryRepository;
+
     public function __construct()
     {
         $this->userRepository = new UserRepository();
+        $this->pokeHistoryRepository = new PokeHistoryRepository();
     }
 
     /**
@@ -97,6 +105,35 @@ class UserController
         }
 
         return Helper::response('Vartotojo informacija atnaujinta sėkmingai.');
+    }
+
+    /**
+     * @return string
+     * @throws ValidationException
+     */
+    public function showAllWithPokes(): string
+    {
+        session_start();
+
+        $validator = new UsersWithPokesValidator();
+        $validator->validate();
+
+        $users = $this->userRepository->getAllUsers();
+        $result = [];
+
+        foreach ($users as $user) {
+            $tempUser = [
+                'id'         => $user['id'],
+                'first_name' => $user['first_name'],
+                'last_name'  => $user['last_name'],
+                'email'      => $user['email'],
+                'poke_count' => count($this->pokeHistoryRepository->getAllPokesByEmailTo($user['email']))
+            ];
+
+            $result[] = $tempUser;
+        }
+
+        return Helper::response(null, $result);
     }
 
     /**

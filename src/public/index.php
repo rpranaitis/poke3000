@@ -19,6 +19,7 @@ date_default_timezone_set('Europe/Vilnius');
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', PokeController::class . '/index');
     $r->addGroup('/users', function (RouteCollector $r) {
+        $r->addRoute('GET', '/all', UserController::class . '/showAllWithPokes');
         $r->addRoute('GET', '/show/{id}', UserController::class . '/show');
         $r->addRoute('POST', '/register', UserController::class . '/register');
         $r->addRoute('POST', '/login', UserController::class . '/login');
@@ -26,7 +27,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
         $r->addRoute('POST', '/edit/{id}', UserController::class . '/edit');
     });
     $r->addGroup('/pokes', function (RouteCollector $r) {
-        $r->addRoute('GET', '/all', PokeController::class . '/showAllUsersWithPokes');
+        $r->addRoute('GET', '/{id}', PokeController::class . '/showAllUserPokes');
         $r->addRoute('POST', '/poke', PokeController::class . '/poke');
     });
     $r->addGroup('/services', function (RouteCollector $r) {
