@@ -20,6 +20,22 @@ class UserRepository extends Repository
     }
 
     /**
+     * @param string $name
+     * @return array
+     */
+    public function getAllUsersByName(string $name): array
+    {
+        $query = 'SELECT * FROM users WHERE first_name LIKE CONCAT(:name, "%")';
+
+        $stmt = $this->dbh->prepare($query);
+        $stmt->execute([
+            'name' => $name
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * @param string $username
      * @return mixed
      */

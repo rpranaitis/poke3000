@@ -118,7 +118,12 @@ class UserController
         $validator = new UsersWithPokesValidator();
         $validator->validate();
 
-        $users = $this->userRepository->getAllUsers();
+        if (!empty($_GET['name'])) {
+            $users = $this->userRepository->getAllUsersByName($_GET['name']);
+        } else {
+            $users = $this->userRepository->getAllUsers();
+        }
+
         $result = [];
 
         foreach ($users as $user) {
