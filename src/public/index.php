@@ -27,6 +27,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
         $r->addRoute('POST', '/edit/{id}', UserController::class . '/edit');
     });
     $r->addGroup('/pokes', function (RouteCollector $r) {
+        $r->addRoute('GET', '/all', PokeController::class . '/showAllPokes');
         $r->addRoute('GET', '/{id}', PokeController::class . '/showAllUserPokes');
         $r->addRoute('POST', '/poke', PokeController::class . '/poke');
     });

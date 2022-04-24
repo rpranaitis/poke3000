@@ -4,7 +4,7 @@ namespace App\Validators\Poke;
 
 use App\Exceptions\ValidationException;
 
-class PokeValidator extends BaseValidator
+class PokeSendingValidator extends BaseValidator
 {
     /**
      * @throws ValidationException

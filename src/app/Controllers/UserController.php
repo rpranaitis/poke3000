@@ -36,6 +36,64 @@ class UserController
      * @return string
      * @throws ValidationException
      */
+    public function showAllWithPokes(): string
+    {
+        session_start();
+
+        $validator = new UsersWithPokesValidator();
+        $validator->validate();
+
+        $users = $this->userRepository->getAllUsers();
+        $result = [];
+
+        foreach ($users as $user) {
+            $tempUser = [
+                'id'         => $user['id'],
+                'first_name' => $user['first_name'],
+                'last_name'  => $user['last_name'],
+                'email'      => $user['email'],
+                'poke_count' => count($this->pokeHistoryRepository->getAllPokesByEmailTo($user['email']))
+            ];
+
+            $result[] = $tempUser;
+        }
+
+        return Helper::response(null, $result);
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     * @throws ValidationException
+     */
+    public function show(int $id): string
+    {
+        session_start();
+
+        $validator = new ShowValidator();
+        $validator->validate($id);
+
+        $user = $this->userRepository->getUserById($id);
+
+        if (!$user) {
+            throw new ValidationException('Įvyko klaida grąžinant vartotoją.');
+        }
+
+        $data = [
+            'id'         => $user['id'],
+            'username'   => $user['username'],
+            'first_name' => $user['first_name'],
+            'last_name'  => $user['last_name'],
+            'email'      => $user['email']
+        ];
+
+        return Helper::response(null, $data);
+    }
+
+    /**
+     * @return string
+     * @throws ValidationException
+     */
     public function register(): string
     {
         $validator = new RegistrationValidator();
@@ -105,68 +163,5 @@ class UserController
         }
 
         return Helper::response('Vartotojo informacija atnaujinta sėkmingai.');
-    }
-
-    /**
-     * @return string
-     * @throws ValidationException
-     */
-    public function showAllWithPokes(): string
-    {
-        session_start();
-
-        $validator = new UsersWithPokesValidator();
-        $validator->validate();
-
-        if (!empty($_GET['name'])) {
-            $users = $this->userRepository->getAllUsersByName($_GET['name']);
-        } else {
-            $users = $this->userRepository->getAllUsers();
-        }
-
-        $result = [];
-
-        foreach ($users as $user) {
-            $tempUser = [
-                'id'         => $user['id'],
-                'first_name' => $user['first_name'],
-                'last_name'  => $user['last_name'],
-                'email'      => $user['email'],
-                'poke_count' => count($this->pokeHistoryRepository->getAllPokesByEmailTo($user['email']))
-            ];
-
-            $result[] = $tempUser;
-        }
-
-        return Helper::response(null, $result);
-    }
-
-    /**
-     * @param int $id
-     * @return string
-     * @throws ValidationException
-     */
-    public function show(int $id): string
-    {
-        session_start();
-
-        $validator = new ShowValidator();
-        $validator->validate($id);
-
-        $user = $this->userRepository->getUserById($id);
-
-        if (!$user) {
-            throw new ValidationException('Įvyko klaida grąžinant vartotoją.');
-        }
-
-        $data = [
-            'id'         => $user['id'],
-            'username'   => $user['username'],
-            'first_name' => $user['first_name'],
-            'last_name'  => $user['last_name'],
-            'email'      => $user['email']
-        ];
-
-        return Helper::response(null, $data);
     }
 }

@@ -16,4 +16,15 @@ class UserPokesValidator extends BaseValidator
         $this->validateSession();
         $this->validatePermission($id);
     }
+
+    /**
+     * @param int $id
+     * @throws ValidationException
+     */
+    protected function validatePermission(int $id)
+    {
+        if ($_SESSION['user_id'] !== $id) {
+            throw new ValidationException('Jūs neturite teisės šiam veiksmui.');
+        }
+    }
 }

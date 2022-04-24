@@ -7,7 +7,8 @@ use App\Helper;
 use App\Mail\PokeReceived;
 use App\Repositories\PokeHistoryRepository;
 use App\Repositories\UserRepository;
-use App\Validators\Poke\PokeValidator;
+use App\Validators\Poke\PokesValidator;
+use App\Validators\Poke\PokeSendingValidator;
 use App\Validators\Poke\UserPokesValidator;
 use Exception;
 
@@ -44,6 +45,22 @@ class PokeController
     }
 
     /**
+     * @return string
+     * @throws ValidationException
+     */
+    public function showAllPokes(): string
+    {
+        session_start();
+
+        $validator = new PokesValidator();
+        $validator->validate();
+
+        $pokes = $this->pokeHistoryRepository->getAllPokes();
+
+        return Helper::response(null, $pokes);
+    }
+
+    /**
      * @param int $id
      * @return string
      * @throws ValidationException
@@ -74,7 +91,7 @@ class PokeController
     {
         session_start();
 
-        $validator = new PokeValidator();
+        $validator = new PokeSendingValidator();
         $validator->validate();
 
         $from = $this->userRepository->getUserById($_POST['from']);
