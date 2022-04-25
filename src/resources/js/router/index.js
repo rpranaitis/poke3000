@@ -3,17 +3,18 @@ import LoginView from '../views/pages/login/LoginView';
 import RegisterView from '../views/pages/register/RegisterView';
 import UsersView from '../views/pages/users/UsersView';
 import HistoryView from '../views/pages/history/HistoryView';
+import EditProfileView from '../views/pages/profile/edit/EditProfileView';
 
 const router = createRouter({
 	history: createWebHistory('/'),
 	routes: [
 		{
-			path: '/prisijungimas',
+			path: '/prisijungti',
 			name: 'login',
 			component: LoginView
 		},
 		{
-			path: '/registracija',
+			path: '/registruotis',
 			name: 'register',
 			component: RegisterView
 		},
@@ -26,6 +27,11 @@ const router = createRouter({
 			path: '/istorija',
 			name: 'history',
 			component: HistoryView
+		},
+		{
+			path: '/profilis/redaguoti',
+			name: 'edit_profile',
+			component: EditProfileView
 		}
 	]
 });
