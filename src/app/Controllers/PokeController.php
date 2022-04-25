@@ -36,12 +36,9 @@ class PokeController
         $this->pokeReceived = new PokeReceived();
     }
 
-    /**
-     * @return string
-     */
-    public function index(): string
+    public function index()
     {
-        return file_get_contents(ROOT_PATH . '/views/index.phtml');
+        require_once ROOT_PATH . '/views/index.phtml';
     }
 
     /**

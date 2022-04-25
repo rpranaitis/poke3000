@@ -50,7 +50,7 @@ $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
-        echo Helper::responseError('Maršrutas nerastas.');
+        (new PokeController())->index();
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         echo Helper::responseError('Metodas neleidžiamas.');
