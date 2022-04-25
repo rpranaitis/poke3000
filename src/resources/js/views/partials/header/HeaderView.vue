@@ -1,4 +1,5 @@
 <script setup>
+import Popper from 'vue3-popper';
 </script>
 <template>
 	<header class="bg-primary text-white p-4 d-flex justify-content-between align-items-center b-shadow">
@@ -6,7 +7,28 @@
 			<p class="m-0">BAKSNOTOJAS 3000</p>
 		</div>
 		<div class="menu d-flex gap-5">
-			<i class="fa-solid fa-hand-point-right fs-4"></i>
+			<Popper arrow>
+				<i class="poke-list-icon fa-solid fa-hand-point-right fs-4"></i>
+				<template #content>
+					<ul class="fs-m dots-none p-0 m-0">
+						<li>Poke nuo <span class="fw-bold">Petras Petraitis</span></li>
+						<hr class="my-2">
+						<li>Poke nuo <span class="fw-bold">Petras Petraitis</span></li>
+						<hr class="my-2">
+						<li>Poke nuo <span class="fw-bold">Petras Petraitis</span></li>
+						<hr class="my-2">
+						<li>Poke nuo <span class="fw-bold">Petras Petraitis</span></li>
+						<hr class="my-2">
+						<li>Poke nuo <span class="fw-bold">Petras Petraitis</span></li>
+						<hr class="my-2">
+						<li>Poke nuo <span class="fw-bold">Petras Petraitis</span></li>
+						<hr class="my-2">
+						<li>Poke nuo <span class="fw-bold">Petras Petraitis</span></li>
+						<hr class="my-2">
+						<li class="text-end mt-3">VISI POKE <i class="fa-solid fa-chevron-right"></i></li>
+					</ul>
+				</template>
+			</Popper>
 			<i class="fa-solid fa-circle-user fs-4"></i>
 			<i class="fa-solid fa-right-from-bracket fs-4"></i>
 		</div>
