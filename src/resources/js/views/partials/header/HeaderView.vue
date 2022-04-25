@@ -1,5 +1,12 @@
 <script setup>
 import Popper from 'vue3-popper';
+import { notify } from '@kyvg/vue3-notification';
+
+function test() {
+	notify({
+		title: 'Vue 3 notification 🎉',
+	});
+}
 </script>
 <template>
 	<header class="bg-primary text-white p-4 d-flex justify-content-between align-items-center b-shadow">
@@ -25,7 +32,7 @@ import Popper from 'vue3-popper';
 						<hr class="my-2">
 						<li>Poke nuo <span class="fw-bold">Petras Petraitis</span></li>
 						<hr class="my-2">
-						<li class="text-end mt-3">VISI POKE <i class="fa-solid fa-chevron-right"></i></li>
+						<li @click="test" class="text-end mt-3">VISI POKE <i class="fa-solid fa-chevron-right"></i></li>
 					</ul>
 				</template>
 			</Popper>
