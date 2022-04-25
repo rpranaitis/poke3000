@@ -23,7 +23,7 @@
 				<tr>
 					<th scope="col" style="width: 200px;">Data</th>
 					<th scope="col" style="width: 150px;">Siuntėjas</th>
-					<th scope="col" style="width: 50px;"></th>
+					<th scope="col" style="width: 70px;"></th>
 					<th scope="col" style="width: 150px;">Gavėjas</th>
 					<th scope="col" style="width: 300px;"></th>
 				</tr>
