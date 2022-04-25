@@ -1,3 +1,9 @@
+<script setup>
+import Datepicker from 'vue3-datepicker';
+import { ref } from 'vue';
+
+const picked = ref(new Date());
+</script>
 <template>
 	<div class="bg-white d-flex flex-column py-5 px-3 p-sm-5 col-12 col-xl-10 b-shadow">
 		<h4 class="text-center">POKE ISTORIJA</h4>
@@ -7,13 +13,19 @@
 				<input type="text" class="form-control bl-none" placeholder="Ieškoti pagal vardą">
 			</div>
 			<div class="date-wrapper d-flex gap-2 gap-md-0 w-md-50">
-				<div class="input-group">
-					<span class="input-group-text bl-md-none"><i class="fa-solid fa-calendar-days"></i></span>
-					<input type="text" class="form-control bl-none" placeholder="Data nuo">
+				<div class="date-second-wrapper d-flex w-100">
+					<div class="input-group d-contents">
+						<span class="input-group-text bl-md-none"><i class="fa-solid fa-calendar-days"></i></span>
+						<Datepicker v-model="picked" class="form-control bl-none bg-white"/>
+						<!--					<input type="text" class="form-control bl-none" placeholder="Data nuo">-->
+					</div>
 				</div>
-				<div class="input-group">
-					<span class="input-group-text bl-md-none"><i class="fa-solid fa-calendar-days"></i></span>
-					<input type="text" class="form-control bl-none" placeholder="Data iki">
+				<div class="date-second-wrapper d-flex w-100">
+					<div class="input-group d-contents">
+						<span class="input-group-text bl-md-none"><i class="fa-solid fa-calendar-days"></i></span>
+						<Datepicker v-model="picked" class="form-control bl-none bg-white"/>
+						<!--					<input type="text" class="form-control bl-none" placeholder="Data iki">-->
+					</div>
 				</div>
 			</div>
 		</div>

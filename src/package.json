@@ -24,7 +24,8 @@
         "bootstrap": "^5.1.3",
         "pinia": "^2.0.13",
         "vue": "^3.2.31",
-        "vue-router": "^4.0.14"
+        "vue-router": "^4.0.14",
+        "vue3-datepicker": "^0.3.3"
     },
     "devDependencies": {
         "axios": "^0.25",
