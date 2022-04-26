@@ -9,7 +9,7 @@ const pokeStore = usePokeStore();
 		<div class="title mb-3 mb-sm-0">
 			<RouterLink class="text-white text-decoration-none" :to="{ name: 'main' }">BAKSNOTOJAS 3000</RouterLink>
 		</div>
-		<div class="menu d-flex gap-5">
+		<div v-if="pokeStore.auth" class="menu d-flex gap-5">
 			<Popper arrow :hover="true">
 				<button class="button-icon default-cursor fa-solid fa-hand-point-right fs-4"></button>
 				<template #content>
@@ -34,7 +34,7 @@ const pokeStore = usePokeStore();
 					</ul>
 				</template>
 			</Popper>
-			<i class="fa-solid fa-circle-user fs-4"></i>
+			<RouterLink class="button-icon" :to="{ name: 'edit_profile' }"><i class="fa-solid fa-circle-user fs-4"></i></RouterLink>
 			<button @click="pokeStore.logout" class="button-icon fa-solid fa-right-from-bracket fs-4"></button>
 		</div>
 	</header>

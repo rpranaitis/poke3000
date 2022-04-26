@@ -19,7 +19,7 @@ axios.interceptors.response.use((response) => {
 		pokeStore.spinner = false;
 
 		notify({
-			title: 'Operacija sėkminga',
+			title: 'Užklausa įvykdyta',
 			text: response.data.message,
 			type: 'bg-success'
 		});
@@ -34,7 +34,7 @@ axios.interceptors.response.use((response) => {
 
 		if (response?.status === 422) {
 			notify({
-				title: 'Klaida',
+				title: 'Klaida!',
 				text: response.data.message,
 				type: 'bg-danger'
 			});

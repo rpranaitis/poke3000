@@ -47,14 +47,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-	if (to.meta.requiresAuth) {
-		const pokeStore = usePokeStore();
+	const pokeStore = usePokeStore();
 
-		pokeStore.checkLogin().catch(() => {
-			return {
-				path: '/prisijungti'
-			};
-		});
+	if (to.meta.requiresAuth && !pokeStore.auth) {
+		return {
+			path: '/prisijungti'
+		};
 	}
 });
 

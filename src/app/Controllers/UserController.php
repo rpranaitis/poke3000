@@ -149,12 +149,12 @@ class UserController
     /**
      * @return string
      */
-    public function isLoggedIn(): string
+    public function checkAuth(): string
     {
         session_start();
 
         if (!empty($_SESSION['user_id'])) {
-            return Helper::response();
+            return Helper::response(null, ['user_id' => $_SESSION['user_id']]);
         }
 
         return Helper::responseError('Jūs esate neprisijungęs');
@@ -176,6 +176,13 @@ class UserController
             throw new ValidationException('Įvyko klaida kreipiantis į duomenų bazę.');
         }
 
-        return Helper::response('Vartotojo informacija atnaujinta sėkmingai.');
+        $data = [
+            'username'   => $_POST['username'],
+            'first_name' => $_POST['first_name'],
+            'last_name'  => $_POST['last_name'],
+            'email'      => $_POST['email']
+        ];
+
+        return Helper::response('Vartotojo informacija atnaujinta sėkmingai.', $data);
     }
 }

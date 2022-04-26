@@ -5,16 +5,15 @@ import router from '../router';
 
 export const usePokeStore = defineStore('poke', {
 	state: () => ({
-		spinner: false
+		spinner: false,
+		auth: null,
+		userInfo: null
 	}),
 
 	getters: {
 	},
 
 	actions: {
-		checkLogin() {
-			return axios.get('/users/is-logged-in', { dontUseSpinner: true });
-		},
 		register(inputs) {
 			axios.post('/users/register', qs.stringify(inputs)).then(response => {
 				if (response) {
@@ -32,6 +31,7 @@ export const usePokeStore = defineStore('poke', {
 					response = response.data;
 
 					if (response.success) {
+						this.auth = response.data;
 						router.push({ name: 'main' });
 					}
 				}
@@ -43,7 +43,31 @@ export const usePokeStore = defineStore('poke', {
 					response = response.data;
 
 					if (response.success) {
+						this.auth = null;
+						router.push({ name: 'login' });
+					}
+				}
+			});
+		},
+		editProfile(inputs) {
+			axios.post(`/users/edit/${this.auth.user_id}`, qs.stringify(inputs)).then(response => {
+				if (response) {
+					response = response.data;
+
+					if (response.success) {
+						this.userInfo = response.data;
 						router.push({ name: 'main' });
+					}
+				}
+			});
+		},
+		loadUserInfo() {
+			return axios.get(`/users/show/${this.auth.user_id}`).then(response => {
+				if (response) {
+					response = response.data;
+
+					if (response.success) {
+						this.userInfo = response.data;
 					}
 				}
 			});
