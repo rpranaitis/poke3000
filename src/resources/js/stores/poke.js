@@ -71,6 +71,9 @@ export const usePokeStore = defineStore('poke', {
 					}
 				}
 			});
+		},
+		loadUserPokeHistory(quantity) {
+			return axios.get(`/pokes/${this.auth.user_id}?q=${quantity}`, { dontUseSpinner: true });
 		}
 	}
 });

@@ -75,7 +75,9 @@ class PokeController
             throw new ValidationException('Įvyko klaida grąžinant vartotoją iš duomenų bazės.');
         }
 
-        $pokes = $this->pokeHistoryRepository->getAllPokesByEmailTo($user['email']) ?? [];
+        $quantity = $_GET['q'] ?? null;
+
+        $pokes = $this->pokeHistoryRepository->getAllUserPokesByEmailTo($user['email'], $quantity) ?? [];
 
         return Helper::response(null, $pokes);
     }
