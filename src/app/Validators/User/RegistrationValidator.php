@@ -13,6 +13,7 @@ class RegistrationValidator extends BaseValidator
     {
         $this->validateRequiredFields();
         $this->validateUsername();
+        $this->validateEmail();
         $this->validateArePasswordsTheSame();
         $this->validatePasswordRules();
     }
@@ -26,6 +27,18 @@ class RegistrationValidator extends BaseValidator
 
         if ($this->userRepository->getUserByUsername($username)) {
             throw new ValidationException('Šis vartotojo vardas jau naudojamas.');
+        }
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    protected function validateEmail()
+    {
+        $email = $_POST['email'];
+
+        if ($this->userRepository->getUserByEmail($email)) {
+            throw new ValidationException('Šis el. pašto adresas jau naudojamas.');
         }
     }
 }

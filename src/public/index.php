@@ -21,6 +21,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addGroup('/users', function (RouteCollector $r) {
         $r->addRoute('GET', '/all', UserController::class . '/showAllWithPokes');
         $r->addRoute('GET', '/show/{id}', UserController::class . '/show');
+        $r->addRoute('GET', '/is-logged-in', UserController::class . '/isLoggedIn');
         $r->addRoute('POST', '/register', UserController::class . '/register');
         $r->addRoute('POST', '/login', UserController::class . '/login');
         $r->addRoute('POST', '/logout', UserController::class . '/logout');

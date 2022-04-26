@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { usePokeStore } from 'stores/poke';
 import LoginView from '../views/pages/login/LoginView';
 import RegisterView from '../views/pages/register/RegisterView';
 import UsersView from '../views/pages/users/UsersView';
@@ -8,6 +9,12 @@ import EditProfileView from '../views/pages/profile/edit/EditProfileView';
 const router = createRouter({
 	history: createWebHistory('/'),
 	routes: [
+		{
+			path: '/',
+			name: 'main',
+			component: UsersView,
+			meta: { requiresAuth: true }
+		},
 		{
 			path: '/prisijungti',
 			name: 'login',
@@ -21,19 +28,34 @@ const router = createRouter({
 		{
 			path: '/vartotojai',
 			name: 'users',
-			component: UsersView
+			component: UsersView,
+			meta: { requiresAuth: true }
 		},
 		{
 			path: '/istorija',
 			name: 'history',
-			component: HistoryView
+			component: HistoryView,
+			meta: { requiresAuth: true }
 		},
 		{
 			path: '/profilis/redaguoti',
 			name: 'edit_profile',
-			component: EditProfileView
+			component: EditProfileView,
+			meta: { requiresAuth: true }
 		}
 	]
+});
+
+router.beforeEach((to) => {
+	if (to.meta.requiresAuth) {
+		const pokeStore = usePokeStore();
+
+		pokeStore.checkLogin().catch(() => {
+			return {
+				path: '/prisijungti'
+			};
+		});
+	}
 });
 
 export default router;

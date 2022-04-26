@@ -20,6 +20,8 @@ class Helper
             'data'    => $data,
         ];
 
+        http_response_code(200);
+
         header('Content-Type: application/json; charset=utf-8');
 
         return json_encode($response);
@@ -38,6 +40,8 @@ class Helper
             'message' => $message,
             'data'    => [],
         ];
+
+        http_response_code(422);
 
         header('Content-Type: application/json; charset=utf-8');
 

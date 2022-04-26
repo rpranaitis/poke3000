@@ -1,38 +1,46 @@
 import { usePokeStore } from 'stores/poke';
+import { notify } from '@kyvg/vue3-notification';
 
 const pokeStore = usePokeStore();
 const axios = require('axios');
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-let errorTimeout = null;
-
 axios.interceptors.request.use((config) => {
-	pokeStore.spinner = true;
-	pokeStore.error_message = null;
-
-	clearTimeout(errorTimeout);
+	if (!config.dontUseSpinner) {
+		pokeStore.spinner = true;
+	}
 
 	return config;
 });
 
 axios.interceptors.response.use((response) => {
-	pokeStore.spinner = false;
+	if (!response.config.dontUseSpinner) {
+		pokeStore.spinner = false;
+
+		notify({
+			title: 'Operacija sėkminga',
+			text: response.data.message,
+			type: 'bg-success'
+		});
+	}
 
 	return response;
 }, (error) => {
-	pokeStore.spinner = false;
+	if (!error.response.config.dontUseSpinner) {
+		pokeStore.spinner = false;
 
-	let response = error.response;
+		let response = error.response;
 
-	if (response?.status === 422) {
-		pokeStore.error_message = response.data.message.split(' (and')[0];
+		if (response?.status === 422) {
+			notify({
+				title: 'Klaida',
+				text: response.data.message,
+				type: 'bg-danger'
+			});
 
-		errorTimeout = setTimeout(() => {
-			pokeStore.error_message = null;
-		}, 7000);
-
-		return;
+			return;
+		}
 	}
 
 	return Promise.reject(error);

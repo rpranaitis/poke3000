@@ -23,15 +23,7 @@ class BaseValidator
     protected function validateRequiredFields()
     {
         if (empty($_POST['username'])) {
-            throw new ValidationException('Neįvestas vartotojo vardas.');
-        }
-
-        if (empty($_POST['password'])) {
-            throw new ValidationException('Neįvestas slaptažodis.');
-        }
-
-        if (empty($_POST['password_repeated'])) {
-            throw new ValidationException('Neįvestas pakartotinas slaptažodis.');
+            throw new ValidationException('Neįvestas prisijungimo vardas.');
         }
 
         if (empty($_POST['first_name'])) {
@@ -44,6 +36,14 @@ class BaseValidator
 
         if (empty($_POST['email'])) {
             throw new ValidationException('Neįvestas el. pašto adresas.');
+        }
+
+        if (empty($_POST['password'])) {
+            throw new ValidationException('Neįvestas slaptažodis.');
+        }
+
+        if (empty($_POST['password_repeated'])) {
+            throw new ValidationException('Neįvestas pakartotinas slaptažodis.');
         }
     }
 

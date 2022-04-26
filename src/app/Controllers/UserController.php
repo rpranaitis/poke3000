@@ -147,6 +147,20 @@ class UserController
     }
 
     /**
+     * @return string
+     */
+    public function isLoggedIn(): string
+    {
+        session_start();
+
+        if (!empty($_SESSION['user_id'])) {
+            return Helper::response();
+        }
+
+        return Helper::responseError('Jūs esate neprisijungęs');
+    }
+
+    /**
      * @param int $id
      * @return string
      * @throws ValidationException

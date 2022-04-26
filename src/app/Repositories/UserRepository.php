@@ -36,6 +36,22 @@ class UserRepository extends Repository
     }
 
     /**
+     * @param string $email
+     * @return mixed
+     */
+    public function getUserByEmail(string $email): mixed
+    {
+        $query = 'SELECT * FROM users WHERE email = :email';
+
+        $stmt = $this->dbh->prepare($query);
+        $stmt->execute([
+            'email' => $email
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * @param int $id
      * @return mixed
      */
