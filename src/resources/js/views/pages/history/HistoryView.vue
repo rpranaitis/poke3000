@@ -42,12 +42,14 @@ const dateTo = ref(null);
 					<td>Vardenis Pavardenis</td>
 					<td><i class="fa-solid fa-chevron-right text-silver fs-5"></i></td>
 					<td>Petras Petraitis</td>
+					<td></td>
 				</tr>
 				<tr>
 					<td>2022-04-25</td>
 					<td>Vardenis Pavardenis</td>
 					<td><i class="fa-solid fa-chevron-right text-silver fs-5"></i></td>
 					<td>Petras Petraitis</td>
+					<td></td>
 				</tr>
 				</tbody>
 			</table>

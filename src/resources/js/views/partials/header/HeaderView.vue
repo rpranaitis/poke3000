@@ -15,7 +15,7 @@ function test() {
 		</div>
 		<div class="menu d-flex gap-5">
 			<Popper arrow>
-				<i class="poke-list-icon fa-solid fa-hand-point-right fs-4"></i>
+				<button class="button-icon poke-list-icon fa-solid fa-hand-point-right fs-4"></button>
 				<template #content>
 					<ul class="fs-m dots-none p-0 m-0">
 						<li>Poke nuo <span class="fw-bold">Petras Petraitis</span></li>
