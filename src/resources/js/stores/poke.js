@@ -74,6 +74,17 @@ export const usePokeStore = defineStore('poke', {
 		},
 		loadUserPokeHistory(quantity) {
 			return axios.get(`/pokes/${this.auth.user_id}?q=${quantity}`, { dontUseSpinner: true });
+		},
+		loadUsers() {
+			return axios.get('/users/all');
+		},
+		poke(to) {
+			const data = {
+				to,
+				from: this.auth.user_id
+			};
+
+			return axios.post('/pokes/poke', qs.stringify(data));
 		}
 	}
 });

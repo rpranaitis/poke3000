@@ -52,7 +52,7 @@ class UserController
                 'first_name' => $user['first_name'],
                 'last_name'  => $user['last_name'],
                 'email'      => $user['email'],
-                'poke_count' => count($this->pokeHistoryRepository->getAllPokesByEmailTo($user['email']))
+                'poke_count' => count($this->pokeHistoryRepository->getAllUserPokesByEmailTo($user['email']))
             ];
 
             $result[] = $tempUser;

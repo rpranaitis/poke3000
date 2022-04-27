@@ -5,7 +5,7 @@ import { ref } from 'vue';
 
 const pokeStore = usePokeStore();
 
-const pokeHistory = ref([]);
+const pokeHistory = ref(null);
 
 function loadPokeHistory() {
 	pokeHistory.value = null;
@@ -30,7 +30,7 @@ function loadPokeHistory() {
 					<ul class="fs-m dots-none p-0 m-0 w-100">
 						<li v-for="poke in pokeHistory" :key="poke">Poke nuo <span class="fw-bold">{{ poke.sender_first_name }} {{ poke.sender_last_name }}</span></li>
 					</ul>
-					<p v-if="!pokeHistory.length" class="fs-m m-0">Dar negavai nei vieno poke!</p>
+					<p v-if="!pokeHistory.length" class="fs-m my-1">Dar negavai nei vieno poke!</p>
 					<div class="d-flex justify-content-end">
 						<RouterLink class="router-link text-decoration-none mt-3 fs-m" :to="{ name: 'history' }">VISI POKE <i class="fa-solid fa-chevron-right"></i></RouterLink>
 					</div>

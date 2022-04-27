@@ -24,7 +24,7 @@ class PokeHistoryRepository extends Repository
      * @param string|null $quantity
      * @return bool|array
      */
-    public function getAllUserPokesByEmailTo(string $to, ?string $quantity): bool|array
+    public function getAllUserPokesByEmailTo(string $to, ?string $quantity = null): bool|array
     {
         $query = 'SELECT `date`, u1.first_name as "sender_first_name", u1.last_name as "sender_last_name" FROM pokes_history INNER JOIN users AS u1 ON pokes_history.from = u1.email WHERE `to` = :to ORDER BY `date` DESC';
 

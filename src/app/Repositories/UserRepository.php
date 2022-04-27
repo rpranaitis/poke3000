@@ -11,7 +11,7 @@ class UserRepository extends Repository
      */
     public function getAllUsers(): array
     {
-        $query = 'SELECT * FROM users';
+        $query = 'SELECT * FROM users ORDER BY id DESC';
 
         $stmt = $this->dbh->prepare($query);
         $stmt->execute();

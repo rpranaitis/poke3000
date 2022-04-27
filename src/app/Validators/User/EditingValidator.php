@@ -15,7 +15,28 @@ class EditingValidator extends BaseValidator
         $this->validateSession();
         $this->validateRequiredFields();
         $this->validatePermission($id);
+        $this->validateEmail($id);
         $this->validateArePasswordsTheSame();
         $this->validatePasswordRules();
+    }
+
+    /**
+     * @param int $id
+     * @throws ValidationException
+     */
+    protected function validateEmail(int $id)
+    {
+        $email = $_POST['email'];
+        $user = $this->userRepository->getUserById($id);
+
+        if (!$user) {
+            throw new ValidationException('Vartotojas nerastas duomenų bazėje.');
+        }
+
+        if ($email !== $user['email']) {
+            if ($this->userRepository->getUserByEmail($email)) {
+                throw new ValidationException('Šis el. pašto adresas jau naudojamas.');
+            }
+        }
     }
 }
