@@ -8,7 +8,7 @@ const name = ref(null);
 
 const pagination = reactive({
 	page: 1,
-	per_page: 5
+	per_page: 10
 });
 
 function getUsers() {
@@ -85,7 +85,7 @@ pokeStore.loadUsers().then(response => {
 				</tbody>
 			</table>
 			<div class="d-sm-flex justify-content-center text-center fs-m mt-4">
-				<PaginationVue v-model="pagination.page" :records="getUsers().count" :per-page="pagination.per_page" @paginate="getUsers" :options="{ chunksNavigation: fixed, hideCount: true }"/>
+				<PaginationVue v-model="pagination.page" :records="getUsers().count" :per-page="pagination.per_page" @paginate="getUsers" :options="{ texts: { count: 'Rodoma nuo {from} iki {to} iš {count} vartotojų|Rasta vartotojų: {count}|Rasta vartotojų: 1' } }"/>
 			</div>
 		</div>
 	</div>

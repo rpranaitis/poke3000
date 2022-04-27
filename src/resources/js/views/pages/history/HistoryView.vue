@@ -11,21 +11,34 @@ const dateTo = ref(null);
 const name = ref(null);
 const history = reactive([]);
 
+const pagination = reactive({
+	page: 1,
+	per_page: 10
+});
+
 function getHistory() {
-	let result = history;
+	let result = {
+		history
+	};
 
 	if (name.value) {
-		result = result.filter(x => x.sender_first_name.startsWith(name.value) || x.recipient_first_name.startsWith(name.value));
+		result.history = result.history.filter(x => x.sender_first_name.startsWith(name.value) || x.recipient_first_name.startsWith(name.value));
 	}
 
 	if (dateFrom.value) {
-		result = result.filter(x => (new Date(x.date)).getTime() >= (new Date(dateFrom.value.toLocaleDateString())).getTime());
+		result.history = result.history.filter(x => (new Date(x.date)).getTime() >= (new Date(dateFrom.value.toLocaleDateString())).getTime());
 	}
 
 	if (dateTo.value) {
-		result = result.filter(x => (new Date(x.date)).getTime() <= (new Date(dateTo.value.toLocaleDateString())).getTime());
+		result.history = result.history.filter(x => (new Date(x.date)).getTime() <= (new Date(dateTo.value.toLocaleDateString())).getTime());
 	}
 
+	result.count = result.history.length;
+
+	const from = pagination.page > 1 ? ((pagination.page - 1) * pagination.per_page) : 0;
+	const to = pagination.page > 1 ? ((pagination.page - 1) * pagination.per_page) + pagination.per_page : pagination.per_page;
+
+	result.history = result.history.slice(from, to);
 
 	return result;
 }
@@ -71,7 +84,7 @@ pokeStore.loadHistory().then(response => {
 				</tr>
 				</thead>
 				<tbody>
-				<tr v-for="history in getHistory()" :key="history">
+				<tr v-for="history in getHistory().history" :key="history">
 					<td>{{ history.date }}</td>
 					<td>{{ history.sender_first_name }} {{ history.sender_last_name }}</td>
 					<td><i class="fa-solid fa-chevron-right text-silver fs-5"></i></td>
@@ -80,6 +93,9 @@ pokeStore.loadHistory().then(response => {
 				</tr>
 				</tbody>
 			</table>
+			<div class="d-sm-flex justify-content-center text-center fs-m mt-4">
+				<PaginationVue v-model="pagination.page" :records="getHistory().count" :per-page="pagination.per_page" @paginate="getHistory" :options="{ texts: { count: 'Rodoma nuo {from} iki {to} iš {count} įrašų|Rasta įrašų: {count}|Rasta įrašų: 1' } }"/>
+			</div>
 		</div>
 	</div>
 </template>
