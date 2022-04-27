@@ -17,13 +17,9 @@ function getData() {
 	};
 }
 
-if (!pokeStore.userInfo) {
-	pokeStore.loadUserInfo().then(() => {
-		Object.assign(inputs, getData());
-	});
-} else {
+pokeStore.loadUserInfo().then(() => {
 	Object.assign(inputs, getData());
-}
+});
 </script>
 <template>
 	<div class="bg-white d-flex flex-column align-items-center py-5 px-3 p-sm-5 col-12 col-lg-8 col-xl-7">

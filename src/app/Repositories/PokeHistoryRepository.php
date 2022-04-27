@@ -11,7 +11,7 @@ class PokeHistoryRepository extends Repository
      */
     public function getAllPokes(): array
     {
-        $query = 'SELECT `date`, u1.first_name as "sender_first_name", u1.last_name as "sender_last_name", u2.first_name as "recipient_first_name", u2.last_name as "recipient_last_name" FROM pokes_history INNER JOIN users AS u1 ON pokes_history.from = u1.email INNER JOIN users AS u2 ON pokes_history.to = u2.email';
+        $query = 'SELECT `date`, u1.first_name as "sender_first_name", u1.last_name as "sender_last_name", u2.first_name as "recipient_first_name", u2.last_name as "recipient_last_name" FROM pokes_history INNER JOIN users AS u1 ON pokes_history.from = u1.email INNER JOIN users AS u2 ON pokes_history.to = u2.email ORDER BY pokes_history.id DESC';
 
         $stmt = $this->dbh->prepare($query);
         $stmt->execute();

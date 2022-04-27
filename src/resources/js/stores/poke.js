@@ -78,6 +78,9 @@ export const usePokeStore = defineStore('poke', {
 		loadUsers() {
 			return axios.get('/users/all');
 		},
+		loadHistory() {
+			return axios.get('/pokes/all');
+		},
 		poke(to) {
 			const data = {
 				to,
