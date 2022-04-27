@@ -6,12 +6,28 @@ const pokeStore = usePokeStore();
 const users = reactive([]);
 const name = ref(null);
 
+const pagination = reactive({
+	page: 1,
+	per_page: 5
+});
+
 function getUsers() {
+	let result = {
+		users
+	};
+
 	if (name.value) {
-		return users.filter(x => x.first_name.startsWith(name.value));
+		result.users = result.users.filter(x => x.first_name.startsWith(name.value));
 	}
 
-	return users;
+	result.count = result.users.length;
+
+	const from = pagination.page > 1 ? ((pagination.page - 1) * pagination.per_page) : 0;
+	const to = pagination.page > 1 ? ((pagination.page - 1) * pagination.per_page) + pagination.per_page : pagination.per_page;
+
+	result.users = result.users.slice(from, to);
+
+	return result;
 }
 
 function sendPoke(id) {
@@ -47,15 +63,15 @@ pokeStore.loadUsers().then(response => {
 			<table class="table users-table text-center fs-m">
 				<thead>
 				<tr>
-					<th scope="col">Vardas</th>
-					<th scope="col">Pavardė</th>
-					<th scope="col">El. paštas</th>
-					<th scope="col">Poke skaičius</th>
-					<th scope="col"></th>
+					<th scope="col" style="width: 230px;">Vardas</th>
+					<th scope="col" style="width: 230px;">Pavardė</th>
+					<th scope="col" style="width: 265px;">El. paštas</th>
+					<th scope="col" style="width: 120px;">Poke skaičius</th>
+					<th scope="col" style="width: 250px;"></th>
 				</tr>
 				</thead>
 				<tbody>
-				<tr v-for="user in getUsers()" :key="user">
+				<tr v-for="user in getUsers().users" :key="user">
 					<td>{{ user.first_name }}</td>
 					<td>{{ user.last_name }}</td>
 					<td>{{ user.email }}</td>
@@ -68,6 +84,9 @@ pokeStore.loadUsers().then(response => {
 				</tr>
 				</tbody>
 			</table>
+			<div class="d-sm-flex justify-content-center text-center fs-m mt-4">
+				<PaginationVue v-model="pagination.page" :records="getUsers().count" :per-page="pagination.per_page" @paginate="getUsers" :options="{ chunksNavigation: fixed, hideCount: true }"/>
+			</div>
 		</div>
 	</div>
 </template>
