@@ -43,6 +43,12 @@ function getHistory() {
 	return result;
 }
 
+function clearFilter() {
+	name.value = null;
+	dateFrom.value = null;
+	dateTo.value = null;
+}
+
 pokeStore.loadHistory().then(response => {
 	if (response) {
 		response = response.data;
@@ -56,6 +62,7 @@ pokeStore.loadHistory().then(response => {
 <template>
 	<div class="bg-white d-flex flex-column py-5 px-3 p-sm-5 col-12 col-xl-10 b-shadow">
 		<h4 class="text-center">POKE ISTORIJA</h4>
+		<span @click="clearFilter" class="m-0 fs-m text-decoration-underline text-center cursor-pointer">Išvalyti filtrą</span>
 		<div class="filters d-flex flex-column flex-md-row my-4 gap-2 gap-md-0">
 			<div class="input-group w-md-50">
 				<span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>

@@ -30,6 +30,10 @@ function getUsers() {
 	return result;
 }
 
+function clearFilter() {
+	name.value = null;
+}
+
 function sendPoke(id) {
 	pokeStore.poke(id).then(response => {
 		if (response) {
@@ -55,6 +59,7 @@ pokeStore.loadUsers().then(response => {
 <template>
 	<div class="bg-white d-flex flex-column py-5 px-3 p-sm-5 col-12 col-xl-10 b-shadow">
 		<h4 class="text-center">VARTOTOJAI</h4>
+		<span @click="clearFilter" class="m-0 fs-m text-decoration-underline text-center cursor-pointer">Išvalyti filtrą</span>
 		<div class="input-group my-4">
 			<span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
 			<input v-model="name" type="text" class="form-control bl-none" placeholder="Ieškoti pagal vardą">

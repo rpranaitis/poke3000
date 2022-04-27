@@ -12,7 +12,7 @@ const router = createRouter({
 		{
 			path: '/',
 			name: 'main',
-			component: UsersView,
+			redirect: '/vartotojai',
 			meta: { requiresAuth: true }
 		},
 		{
